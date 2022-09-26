@@ -7,11 +7,11 @@ class Dataset:
     def __init__(self, x: ndarray, y: ndarray = None, features: list = None, label: str = None):
         """
 
-                :param x:
-                :param y:
-                :param features:
-                :param label:
-                """
+            :param x:
+            :param y:
+            :param features:
+            :param label:
+        """
         self.x = x
         self.y = y
         self.feaures = features
@@ -31,8 +31,8 @@ class Dataset:
         """
         if self.y is not None:
             return True
-        else:
-            return False
+
+        return False
 
     def get_classes(self):
         """
@@ -109,6 +109,7 @@ class Dataset:
              'min': self.get_min(),
              'max': self.get_max()}
         )
+
 
 if __name__ == '__main__':
     x = np.array([[1, 2, 3], [1, 2, 3]])
