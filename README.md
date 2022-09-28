@@ -1,7 +1,7 @@
 # Sistemas Inteligentes para Bioinformática
 
 ## Curricular Unit
-Mestrado em Bioinformática, Universidade do Minho, 2022-2023.
+Intelligent Systems for Bioinformatics  integrated in the Bioinformatics Master Degree at University of Minho, 2022-2023
 
 
 ## Description
