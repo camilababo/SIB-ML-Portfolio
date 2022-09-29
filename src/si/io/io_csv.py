@@ -1,11 +1,12 @@
 from typing import Type, Union
+from urllib import response
 
-import numpy as np
+import pandas
 import pandas as pd
 from si.data.dataset import Dataset
 
 
-def read_csv(filename=Type[str], sep: str = ',', features: bool = None, label: Union[None, int] = None):
+def read_csv(filename=Type[str], sep: str = ',', features: bool = None, label: Union[None, int] = None) -> object:
     """
     Method that reads a csv file.
 
@@ -35,6 +36,9 @@ def read_csv(filename=Type[str], sep: str = ',', features: bool = None, label: U
         y = None
 
     return Dataset(data, y, header_row, y_lab)
+
+
+# def write_csv(dataset, filename=Type[str], sep: str = ',', features: bool = None, label: Union[None, int] = None):
 
 
 if __name__ == '__main__':
