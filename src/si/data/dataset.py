@@ -4,18 +4,29 @@ from numpy import ndarray
 
 
 class Dataset:
-    def __init__(self, x: ndarray, y: ndarray = None, features: list = None, label: str = None):
+    """
+    Class that represents a dataset.
+
+    Attributes
+    ----------
+    x : ndarray
+    y: ndarray
+    features_names: list
+    label_name: str
+
+    """
+    def __init__(self, x: ndarray, y: ndarray = None, features_names: list = None, label_name: str = None):
         """
         Initializes the dataset.
-        :param x: Data.
+        :param x: Values of the features.
         :param y: Samples.
         :param features: Names of the features.
         :param label: Name of the label.
         """
         self.x = x
         self.y = y
-        self.feaures = features
-        self.label = label
+        self.features_names = features_names
+        self.label_name = label_name
 
     def shape(self):
         """
@@ -37,7 +48,7 @@ class Dataset:
     def get_classes(self):
         """
         Returns the classes of the dataset.
-        :return: List
+        :return: ndarray
         """
         if self.y is None:
             return
@@ -47,7 +58,7 @@ class Dataset:
     def get_mean(self):
         """
         Returns the mean of the dataset for each feature.
-        :return: List
+        :return: ndarray
         """
         if self.x is None:
             return
@@ -57,7 +68,7 @@ class Dataset:
     def get_variance(self):
         """
         Returns the variance of the dataset for each feature.
-        :return: List
+        :return: ndarray
         """
         if self.x is None:
             return
@@ -67,7 +78,7 @@ class Dataset:
     def get_median(self):
         """
         Returns the median of the dataset for each feature.
-        :return: List
+        :return: ndarray
         """
 
         if self.x is None:
@@ -78,7 +89,7 @@ class Dataset:
     def get_min(self):
         """
         Returns the minimum value of the dataset for each feature.
-        :return: List
+        :return: ndarray
         """
 
         if self.x is None:
@@ -89,7 +100,7 @@ class Dataset:
     def get_max(self):
         """
         Returns the maximum value of the dataset for each feature.
-        :return: List
+        :return: ndarray
         """
 
         if self.x is None:
@@ -113,8 +124,7 @@ class Dataset:
     def remove_nan(self):
         """
         Removes rows with nan values.
-
-        :return: Dataset
+        :return: Dataframe
         """
 
         if self.x is None:
@@ -127,7 +137,7 @@ class Dataset:
         Replaces nan values with a given value.
 
         :param value: Value that is going to replace the nan values.
-        :return: Dataset
+        :return: DataFrame
         """
 
         if self.x is None:
@@ -143,7 +153,7 @@ class Dataset:
         if self.x is None:
             return
 
-        return pd.DataFrame(self.x, columns=self.feaures, index=self.y)
+        return pd.DataFrame(self.x, columns=self.features_names, index=self.y)
 
 
 if __name__ == '__main__':
@@ -151,7 +161,7 @@ if __name__ == '__main__':
     # y = np.array([1, 2])
     # features = ["A", "B", "C"]
     # label = "y"
-    # dataset = Dataset(x=x, y=y, features=features, label=label)
+    # dataset = Dataset(x=x, y=y, features_names=features, label_name=label)
 
     # print(dataset.shape())
     # print(dataset.has_label())
@@ -167,8 +177,8 @@ if __name__ == '__main__':
     y = np.array([1, 2, 4, 4, 5])
     features = ["A", "B", "C"]
     label = "y"
-    dataset = Dataset(x=x, y=y, features=features, label=label)
+    dataset = Dataset(x=x, y=y, features_names=features, label_name=label)
 
-    print(dataset.print_dataframe())
-    print(dataset.remove_nan())
-    print(dataset.replace_nan(16))
+    # print(dataset.print_dataframe())
+    print(dataset.remove_nan().shape)
+    # print(dataset.replace_nan(16))
