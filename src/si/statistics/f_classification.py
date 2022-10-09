@@ -5,7 +5,7 @@ from si.data.dataset import Dataset
 
 def f_classification(dataset: Dataset):
     """
-    Calculates the F value for each feature.
+    Calculates the score for each feature for classification tasks.
     :param dataset: Dataset object.
     :return: F value for each feature.
     """
