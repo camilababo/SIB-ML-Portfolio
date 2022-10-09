@@ -1,6 +1,7 @@
 from typing import Type, Union
 
 import numpy
+import numpy as np
 import pandas as pd
 
 from si.data.dataset import Dataset
@@ -58,9 +59,11 @@ def write_csv(dataset: Dataset, filename: str, sep: str = ',', features: bool = 
     if label:
         label = dataset.y
         label_name = dataset.label_name
+        # label_values = label.reshape(label.shape[0], 1)
     else:
         label = None
         label_name = None
+        # label_values = np.array([])
 
     label_values = label.reshape(label.shape[0], 1)
     results = numpy.concatenate((features, label_values), axis=1)
