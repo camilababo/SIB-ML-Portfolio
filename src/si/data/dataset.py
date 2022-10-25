@@ -23,6 +23,17 @@ class Dataset:
         :param features: Names of the features.
         :param label: Name of the label.
         """
+        if x is None:
+            raise ValueError("x cannot be None")
+
+        if features_names is None:
+            features_names = [str(i) for i in range(x.shape[1])]
+        else:
+            features_names = list(features_names)
+
+        if y is not None and label_name is None:
+            label_name = "y"
+
         self.x = x
         self.y = y
         self.features_names = features_names
@@ -51,7 +62,7 @@ class Dataset:
         :return: ndarray
         """
         if self.y is None:
-            return
+            raise ValueError("Dataset does not have a label")
 
         return np.unique(self.y)
 
@@ -73,7 +84,7 @@ class Dataset:
         if self.x is None:
             return
 
-        return np.var(self.x, axis=0)
+        return np.nanvar(self.x, axis=0)
 
     def get_median(self):
         """
@@ -84,7 +95,7 @@ class Dataset:
         if self.x is None:
             return
 
-        return np.median(self.x, axis=0)
+        return np.nanmedian(self.x, axis=0)
 
     def get_min(self):
         """
@@ -95,7 +106,7 @@ class Dataset:
         if self.x is None:
             return
 
-        return np.min(self.x, axis=0)
+        return np.nanmin(self.x, axis=0)
 
     def get_max(self):
         """
@@ -106,7 +117,7 @@ class Dataset:
         if self.x is None:
             return
 
-        return np.max(self.x, axis=0)
+        return np.nanmax(self.x, axis=0)
 
     def summary(self):
         """
@@ -118,7 +129,8 @@ class Dataset:
             {'mean': self.get_mean(),
              'median': self.get_median(),
              'min': self.get_min(),
-             'max': self.get_max()}
+             'max': self.get_max(),
+             'var': self.get_variance()}
         )
 
     def remove_nan(self):
@@ -154,7 +166,6 @@ class Dataset:
             return
 
         return pd.DataFrame(self.x, columns=self.features_names, index=self.y)
-
 
 if __name__ == '__main__':
     # x = np.array([[1, 2, 3], [1, 2, 3]])

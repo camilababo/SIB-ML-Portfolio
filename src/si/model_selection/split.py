@@ -19,20 +19,21 @@ def train_test_split(dataset: Dataset, test_size: float = 0.3, random_state: int
     np.random.seed(random_state)
 
     # test set size
-    split_div = int(dataset.shape()[0] * test_size)
+    n_samples = dataset.shape()[0]
+    split_div = int(n_samples * test_size)
 
     # get the dataset permutations
-    permutations = np.random.permutation(split_div)
+    permutations = np.random.permutation(n_samples)
 
     # get the test and train sets
     test_idx = permutations[:split_div]
     train_idx = permutations[split_div:]
 
     # get the training and testing datasets
-    train = Dataset(dataset.x[train_idx], dataset.y[train_idx], features_names=dataset.features[train_idx],
-                    label_name=dataset.label_name[train_idx])
+    train = Dataset(dataset.x[train_idx], dataset.y[train_idx], features_names=dataset.features_names,
+                    label_name=dataset.label_name)
 
-    test = Dataset(dataset.x[test_idx], dataset.y[test_idx], features_names=dataset.features[test_idx],
-                   label_name=dataset.label_name[test_idx])
+    test = Dataset(dataset.x[test_idx], dataset.y[test_idx], features_names=dataset.features_names,
+                   label_name=dataset.label_name)
 
     return train, test
