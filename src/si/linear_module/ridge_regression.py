@@ -56,6 +56,31 @@ class RidgeRegression:
         self.theta_zero = None  # f function of a linear model
         self.cost_history = None  # history of the cost function
 
+    def gradient_descent(self, dataset: Dataset):
+        """
+        Computes the gradient descent of the model
+        :param dataset: The dataset to compute the gradient descent on.
+        :return: The gradient descent of the model
+        """
+        m, n = dataset.shape()
+
+        # predicted y
+        y_pred = np.dot(dataset.x, self.theta) + self.theta_zero  # corresponds to the classical function of
+        # y = mx + b
+
+        # computing and updating the gradient with the learning rate
+        gradient = (self.alpha * (1 / m)) * np.dot(y_pred - dataset.y, dataset.x)  # calculates the
+        # gradient of the cost function
+        # np.dot sums the colum values of the multiplication arrays
+        # learning rate is multiplicated by 1/m to normalize the rate to the dataset size
+
+        # computing the penalty
+        penalization_term = self.alpha * (self.l2_penalty / m) * self.theta
+
+        # updating the model parameters
+        self.theta = self.theta - gradient - penalization_term
+        self.theta_zero = self.theta_zero - (self.alpha * (1 / m)) * np.sum(y_pred - dataset.y)
+
     def fit(self, dataset: Dataset, gradient_descent_algorithm: algorithm_type = 'static_alpha') -> 'RidgeRegression':
         """
         Fit the model to the dataset
@@ -91,6 +116,8 @@ class RidgeRegression:
         # gradient descent
         for i in range(self.max_iter):
 
+            self.gradient_descent(dataset)
+
             # computes the cost function
             self.cost_history[i] = self.cost(dataset)
 
@@ -99,26 +126,12 @@ class RidgeRegression:
 
             if i > 1 and self.cost_history[i - 1] - self.cost_history[i] < threshold:
 
-                # predicted y
-                y_pred = np.dot(dataset.x, self.theta) + self.theta_zero  # corresponds to the classical function of
-                # y = mx + b
-
                 if gradient_descent_algorithm == 'half_alpha':
                     # change alpha value to half
                     self.alpha = self.alpha / 2
 
-                # computing and updating the gradient with the learning rate
-                gradient = (self.alpha * (1 / m)) * np.dot(y_pred - dataset.y, dataset.x)  # calculates the
-                # gradient of the cost function
-                # np.dot sums the colum values of the multiplication arrays
-                # learning rate is multiplicated by 1/m to normalize the rate to the dataset size
-
-                # computing the penalty
-                penalization_term = self.alpha * (self.l2_penalty / m) * self.theta
-
-                # updating the model parameters
-                self.theta = self.theta - gradient - penalization_term
-                self.theta_zero = self.theta_zero - (self.alpha * (1 / m)) * np.sum(y_pred - dataset.y)
+                if gradient_descent_algorithm == 'static_alpha':
+                    break
 
         return self
 
