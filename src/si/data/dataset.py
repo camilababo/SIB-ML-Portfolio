@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from numpy import ndarray
+from pandas import isnull
 
 
 class Dataset:
@@ -15,6 +16,7 @@ class Dataset:
     label_name: str
 
     """
+
     def __init__(self, x: ndarray, y: ndarray = None, features_names: list = None, label_name: str = None):
         """
         Initializes the dataset.
@@ -135,14 +137,14 @@ class Dataset:
 
     def remove_nan(self):
         """
-        Removes rows with nan values.
+        Removes rows with nan values without numpy functions.
         :return: Dataframe
         """
 
         if self.x is None:
             return
 
-        return pd.DataFrame(self.x).dropna(axis=0)
+        return pd.DataFrame(self.x).dropna()
 
     def replace_nan(self, value):
         """
@@ -167,6 +169,7 @@ class Dataset:
 
         return pd.DataFrame(self.x, columns=self.features_names, index=self.y)
 
+
 if __name__ == '__main__':
     # x = np.array([[1, 2, 3], [1, 2, 3]])
     # y = np.array([1, 2])
@@ -190,6 +193,6 @@ if __name__ == '__main__':
     label = "y"
     dataset = Dataset(x=x, y=y, features_names=features, label_name=label)
 
-    # print(dataset.print_dataframe())
-    print(dataset.remove_nan().shape)
+    print(dataset.shape())
+    print(dataset.remove_nan().shape())
     # print(dataset.replace_nan(16))
