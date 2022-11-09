@@ -67,7 +67,7 @@ class LogisticRegression:
         assert gradient_descent_algorithm in options, f"'{gradient_descent_algorithm}' is not in {options}"
 
         # Gradient descent
-        for i in range(self.max_iter):
+        for i in range(int(self.max_iter)):
 
             self.gradient_descent(dataset)
 

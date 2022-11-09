@@ -12,13 +12,8 @@ class testKNNClassifier(unittest.TestCase):
         self.df = read_csv(self.df_path, sep=",", label=True, features=True)
         self.train, self.test = train_test_split(self.df)
 
-
     def test_KNNClassifier(self):
         self.selector = KNNClassifier(k=3, distance=euclidean_distance)
         self.selector.fit(self.train)
 
         self.assertEqual(self.selector.score(self.test), 0.6)
-
-
-
-

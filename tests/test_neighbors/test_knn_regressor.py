@@ -12,7 +12,6 @@ class testKNNRegressor(unittest.TestCase):
         self.df = read_csv(self.df_path, sep=",", label=True, features=True)
         self.train, self.test = train_test_split(self.df)
 
-
     def test_KNNClassifier(self):
         self.selector = KNNRegressor(k=3, distance=euclidean_distance)
         self.selector.fit(self.train)

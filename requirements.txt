@@ -5,3 +5,4 @@ matplotlib
 setuptools~=60.2.0
 scikit-learn
 statsmodels
+traitlets~=5.4.0
