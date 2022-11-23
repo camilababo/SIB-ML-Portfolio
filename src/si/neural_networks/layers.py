@@ -77,3 +77,18 @@ class ReLUActivation:
         data_pos = np.maximum(0, input_data)  # maximum between 0 and the input_data, the 0 is to avoid negative values
 
         return data_pos
+
+
+class LinearActivation:
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def forward(input_data: np.ndarray) -> np.ndarray:
+        """
+        Computes the linear relationship.
+        :param input_data: input data
+        :return: Returns the linear relationship.
+        """
+
+        return input_data
