@@ -14,15 +14,25 @@ class PCA:
         self.components = None
         self.explained_variance = None
 
+    def _get_centered_data(self, dataset: Dataset) -> np.ndarray:
+        """
+        Centers the dataset.
+        :param dataset: Dataset object.
+        :return: A matrix with the centered data.
+        """
+
+        self.mean = np.mean(dataset.x, axis=0)  # axis=0 means that we want to calculate the mean for each column
+        return dataset.x - self.mean
+
     def _get_components(self, dataset: Dataset) -> np.ndarray:
         """
         Calculates the components of the dataset.
         :param dataset:
         :return: A matrix with the components.
         """
-        # Get mean and center data
-        self.mean = np.mean(dataset.x, axis=0)  # axis=0 means that we want to calculate the mean for each column
-        centered_data = dataset.x - self.mean
+
+        # Get centered data
+        centered_data = self._get_centered_data(dataset)
 
         # Get single value decomposition
         self.u_matrix, self.s_matrix, self.v_matrix_t = np.linalg.svd(centered_data, full_matrices=False)
@@ -49,15 +59,6 @@ class PCA:
         Calculates the mean, the components and the explained variance.
         :return: Dataset.
         """
-        # Get mean and center data
-        self.mean = np.mean(dataset.x, axis=0)  # axis=0 means that we want to calculate the mean for each column
-        centered_data = dataset.x - self.mean
-
-        # Get single value decomposition
-        u_matrix, s_matrix, v_matrix_t = np.linalg.svd(centered_data, full_matrices=False)
-
-        # Get principal components
-        self.components = v_matrix_t[:, :self.n_components]  # get the first n_components columns
 
         self.components = self._get_components(dataset)
         self.explained_variance = self._get_explained_variance(dataset)
@@ -72,7 +73,14 @@ class PCA:
         if self.components is None:
             raise Exception("You must fit the PCA before transform the dataset.")
 
-        transformed_data = np.dot(dataset.x, self.components)  # multiplication between the dataset and the components
+        # Get centered data
+        centered_data = self._get_centered_data(dataset)
+
+        # Get transposed V matrix
+        v_matrix = self.v_matrix_t.T
+
+        # Get transformed data
+        transformed_data = np.dot(centered_data, v_matrix)
 
         return Dataset(transformed_data, dataset.y, dataset.features_names, dataset.label_name)
 
