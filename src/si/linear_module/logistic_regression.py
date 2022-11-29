@@ -7,15 +7,51 @@ from si.metrics.accuracy import accuracy
 from si.statistics.sigmoid_function import sigmoid_function
 
 
-algorithm_type = Literal['static_alpha', 'half_alpha']
+alpha_options = Literal['static_alpha', 'half_alpha']
 
 
 class LogisticRegression:
-    def __init__(self, l2_penalty: float = 1, alpha: float = 0.001, max_iter: int = 1000):
+    """
+    The Logistic Regression model is a linear model that is used for classification problems.
+
+    Parameters
+    ----------
+    l2_penalty: float
+        The L2 penalty of the model
+    alpha: float
+        The learning rate of the model
+    max_iter: int
+        The maximum number of iterations of the model
+    alpha_type: alpha_options
+        The gradient descent algorithm to use. There are two options: (1) 'static_alpha': where no alterations are
+        applied to the alpha; or (2) 'half_alpha' where the value of alpha is set to half everytime the cost function
+        value remains the same.
+
+    Attributes
+    ----------
+    theta: np.ndarray
+        The model parameters'
+    theta_zero: float
+        The model bias
+    cost_history: dict
+        The cost history of the model
+    """
+    def __init__(self, l2_penalty: float = 1, alpha: float = 0.001, max_iter: int = 1000,
+                 alpha_type: alpha_options = 'static_alpha'):
+        """
+        Initializes the Logistic Regression model
+        :param l2_penalty: The L2 penalty of the model
+        :param alpha: The learning rate of the model
+        :param max_iter: The maximum number of iterations of the model
+        :param alpha_type: The gradient descent algorithm to use. There are two options: (1) 'static_alpha': where no
+        alterations are applied to the alpha; or (2) 'half_alpha' where the value of alpha is set to half everytime
+        the cost function value remains the same.
+        """
         # parameters
         self.l2_penalty = l2_penalty
         self.alpha = alpha
         self.max_iter = max_iter
+        self.alpha_type = alpha_type
 
         # attributes
         self.theta = None
@@ -43,14 +79,10 @@ class LogisticRegression:
         self.theta = self.theta - gradient - penalization_term
         self.theta_zero = self.theta_zero - (self.alpha * (1 / m)) * np.sum(y_pred - dataset.y)
 
-    def fit(self, dataset: Dataset, gradient_descent_algorithm: algorithm_type = 'static_alpha') \
-            -> 'LogisticRegression':
+    def fit(self, dataset: Dataset) -> 'LogisticRegression':
         """
         Fits the model to the dataset
         :param dataset: The dataset to fit the model on.
-        :param gradient_descent_algorithm: The gradient descent algorithm to use. There are two option 'static_alpha'
-        where no alterations are applied to the alpha or 'half_alpha' where the value of alpha is set to half everytime
-        the cost function value remains the same.
         :return: A Logistic Regression object of the fitted model
         """
         m, n = dataset.shape()
@@ -63,8 +95,8 @@ class LogisticRegression:
         self.cost_history = {}
 
         # check if gradient descent algorithm of choice is valid
-        options = get_args(algorithm_type)
-        assert gradient_descent_algorithm in options, f"'{gradient_descent_algorithm}' is not in {options}"
+        options = get_args(alpha_options)
+        assert self.alpha_type in options, f"'{self.alpha_type}' is not in {options}"
 
         # Gradient descent
         for i in range(int(self.max_iter)):
@@ -79,11 +111,11 @@ class LogisticRegression:
 
             if i > 1 and self.cost_history[i - 1] - self.cost_history[i] < threshold:
 
-                if gradient_descent_algorithm == 'half_alpha':
+                if self.alpha_type == 'half_alpha':
                     # change alpha value to half
                     self.alpha = self.alpha / 2
 
-                if gradient_descent_algorithm == 'static_alpha':
+                if self.alpha_type == 'static_alpha':
                     break
 
         return self

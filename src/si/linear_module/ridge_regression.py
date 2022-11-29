@@ -5,13 +5,13 @@ import numpy as np
 from si.data.dataset import Dataset
 from si.metrics.mse import mse
 
-algorithm_type = Literal['static_alpha', 'half_alpha']
+alpha_options = Literal['static_alpha', 'half_alpha']
 
 
 class RidgeRegression:
     """
     The RidgeRegression is a linear model using the L2 regularization.
-    This model solves the linear regression problem using an adapted Gradient Descent technique
+    This model solves the linear regression problem using an adapted Gradient Descent technique.
 
     Parameters
     ----------
@@ -34,22 +34,23 @@ class RidgeRegression:
         The history of the cost function of the model.
     """
 
-    def __init__(self, l2_penalty: float = 1, alpha: float = 0.001, max_iter: int = 1000):
+    def __init__(self, l2_penalty: float = 1, alpha: float = 0.001, max_iter: int = 1000,
+                 alpha_type: alpha_options = 'static_alpha'):
         """
+        Initializes the RidgeRegression model
 
-        Parameters
-        ----------
-        l2_penalty: float
-            The L2 regularization parameter
-        alpha: float
-            The learning rate
-        max_iter: int
-            The maximum number of iterations
+        :param l2_penalty: The L2 regularization parameter
+        :param alpha: The learning rate
+        :param max_iter: The maximum number of iterations
+        :param alpha_type: The gradient descent algorithm to use. There are two options: (1) 'static_alpha': where no
+        alterations are applied to the alpha; or (2) 'half_alpha' where the value of alpha is set to half everytime
+        the cost function value remains the same.
         """
         # parameters
         self.l2_penalty = l2_penalty  # l2 regularization parameter
         self.alpha = alpha  # learning rate, set as a low value to not jump over the minimum
         self.max_iter = max_iter
+        self.alpha_type = alpha_type
 
         # attributes
         self.theta = None  # model coefficient
@@ -81,22 +82,11 @@ class RidgeRegression:
         self.theta = self.theta - gradient - penalization_term
         self.theta_zero = self.theta_zero - (self.alpha * (1 / m)) * np.sum(y_pred - dataset.y)
 
-    def fit(self, dataset: Dataset, gradient_descent_algorithm: algorithm_type = 'static_alpha') -> 'RidgeRegression':
+    def fit(self, dataset: Dataset) -> 'RidgeRegression':
         """
         Fit the model to the dataset
-
-        Parameters ----------
-        dataset: Dataset
-            The dataset to fit the model to
-        gradient_descent_algorithm: str
-            Algorithm of choice for the gradient descent. There are two option 'static_alpha' where no alterations are
-            applied to the alpha or 'half_alpha' where the value of alpha is set to half everytime the cost function
-            value remains the same.
-
-        Returns
-        -------
-        self: RidgeRegression
-            The fitted model
+        :param dataset: The dataset to fit the model to
+        :return: The fitted model
         """
 
         m, n = dataset.shape()
@@ -110,8 +100,8 @@ class RidgeRegression:
         self.cost_history = {}
 
         # check if gradient descent algorithm of choice is valid
-        options = get_args(algorithm_type)
-        assert gradient_descent_algorithm in options, f"'{gradient_descent_algorithm}' is not in {options}"
+        options = get_args(alpha_options)
+        assert self.alpha_type in options, f"'{self.alpha_type}' is not in {options}"
 
         # gradient descent
         for i in range(self.max_iter):
@@ -126,11 +116,11 @@ class RidgeRegression:
 
             if i > 1 and self.cost_history[i - 1] - self.cost_history[i] < threshold:
 
-                if gradient_descent_algorithm == 'half_alpha':
+                if self.alpha_type == 'half_alpha':
                     # change alpha value to half
                     self.alpha = self.alpha / 2
 
-                if gradient_descent_algorithm == 'static_alpha':
+                if self.alpha_type == 'static_alpha':
                     break
 
         return self
@@ -139,15 +129,8 @@ class RidgeRegression:
         """
         Predict the output of the dataset
 
-        Parameters
-        ----------
-        dataset: Dataset
-            The dataset to predict the output of the dataset
-
-        Returns
-        -------
-        predictions: np.array
-            The predictions of the dataset
+        :param dataset: The dataset to predict the output of the dataset
+        :return: The predictions of the dataset
         """
         return np.dot(dataset.x, self.theta) + self.theta_zero
 
@@ -155,15 +138,8 @@ class RidgeRegression:
         """
         Compute the Mean Square Error of the model on the dataset
 
-        Parameters
-        ----------
-        dataset: Dataset
-            The dataset to compute the MSE on
-
-        Returns
-        -------
-        mse: float
-            The Mean Square Error of the model
+        :param dataset: The dataset to compute the MSE on
+        :return: The Mean Square Error of the model
         """
         y_pred = self.predict(dataset)
         return mse(dataset.y, y_pred)
@@ -172,15 +148,8 @@ class RidgeRegression:
         """
         Compute the cost function (J function) of the model on the dataset using L2 regularization
 
-        Parameters
-        ----------
-        dataset: Dataset
-            The dataset to compute the cost function on
-
-        Returns
-        -------
-        cost: float
-            The cost function of the model
+        :param dataset: The dataset to compute the cost function on
+        :return: The cost function of the model
         """
         y_pred = self.predict(dataset)
 
@@ -195,10 +164,7 @@ class RidgeRegression:
     def cost_function_plot(self):
         """
         Plots the cost function history of the model
-
-        Returns
-        -------
-        None
+        :return: None
         """
         import matplotlib.pyplot as plt
 
