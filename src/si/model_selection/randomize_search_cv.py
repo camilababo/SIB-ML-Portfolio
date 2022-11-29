@@ -17,7 +17,7 @@ def randomized_search_cv(model,
                          test_size: float = 0.3) -> Dict[str, Tuple[str, Num]]:
     scores = {
         'parameters': [],
-        'seeds': [],
+        'seed': [],
         'train': [],
         'test': []
     }
@@ -34,7 +34,7 @@ def randomized_search_cv(model,
         random_state = np.random.randint(0, 1000)
 
         # store the seed
-        scores['seeds'].append(random_state)
+        scores['seed'].append(random_state)
 
         # parameter configuration
         parameters = {}
