@@ -27,6 +27,14 @@ class Dense:
         # the number os columns of the input_data must be equal to the number of rows of the weights
         return np.dot(input_data, self.weights) + self.bias
 
+    def backward(self, error: np.ndarray, learning_rate: float) -> np.ndarray:
+        """
+
+        :param error:
+        :param learning_rate:
+        :return:
+        """
+
 
 class SigmoidActivation:
     def __init__(self):

@@ -1,4 +1,10 @@
+from typing import Callable
+
+import numpy as np
+
 from si.data.dataset import Dataset
+from si.metrics.mse import mse
+from si.metrics.mse_derivate import mse_derivative
 
 
 class NN:
@@ -19,10 +25,89 @@ class NN:
 
         return self
 
-    # def predict(self, dataset: Dataset) -> np.ndarray:
-    #     """
-    #     Predicts the classes of the dataset.
-    #     :param dataset: dataset to predict the classes
-    #     :return: Returns the predicted classes.
-    #     """
+    def predict(self, dataset: Dataset) -> np.ndarray:
+        """
+        Predicts the classes of the dataset.
+        :param dataset: dataset to predict the classes
+        :return: Returns the predicted classes.
+        """
+
+        x = dataset.x
+
+        # forward propagation
+        for layer in self.layers:
+            x = layer.forward(x)
+
+        return x
+
+
+class Backpropagation:
+    def __init__(self,
+                 layers: list,
+                 epochs: int = 1000,
+                 learning_rate: float = 0.01,
+                 loss: Callable = mse,
+                 loss_derivative: Callable = mse_derivative,
+                 verbose: bool = False):
+
+        """
+        Initializes the backpropagation algorithm.
+        :param layers: layers of the neural network
+        :param epochs: number of epochs
+        :param learning_rate: learning rate
+        :param loss: loss function
+        :param loss_derivative: loss derivative function
+        :param verbose: if True will print the loss of each epoch
+        """
+
+        # parameters
+        self.layers = layers
+        self.epochs = epochs
+        self.learning_rate = learning_rate
+        self.loss = loss
+        self.loss_derivative = loss_derivative
+        self.verbose = verbose
+
+        # attributes
+        self.history = {}  # dictionary to store the loss of each epoch
+
+    def fit(self, dataset: Dataset) -> 'Backpropagation':
+        """
+        Trains the neural network.
+        :param dataset: dataset to train the neural network
+        :return: Returns the trained neural network.
+        """
+
+        # Extract the input data and the target data
+        x = dataset.x
+        y = dataset.y
+
+        for epoch in range(1, self.epochs + 1):
+
+            # forward propagation
+            for layer in self.layers:
+                x = layer.forward(x)
+
+            # backward propagation
+            # the loss derivative is calculated by the last layer
+            # if we calculated the loss we would obtain a float value
+            error = self.loss_derivative(y, x)
+
+            # the error is propagated backwards
+            for layer in self.layers[::-1]:
+                # the list is reversed to propagate the error backwards, we start by the last layer
+                error = layer.backward(error, self.learning_rate)
+
+            # saves history cost
+            cost = self.loss(y, x)  # now with mse
+            self.history[epoch] = cost
+
+            # prints the loss value if verbose is True
+            if self.verbose:
+                print(f'Epoch {epoch}/{self.epochs} --- cost: {cost}')
+
+            return self
+
+
+
 
