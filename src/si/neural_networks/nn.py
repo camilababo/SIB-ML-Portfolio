@@ -3,8 +3,7 @@ from typing import Callable
 import numpy as np
 
 from si.data.dataset import Dataset
-from si.metrics.mse import mse
-from si.metrics.mse_derivate import mse_derivative
+from si.metrics.mse import mse, mse_derivative
 
 
 class NN:
@@ -78,11 +77,11 @@ class Backpropagation:
         :return: Returns the trained neural network.
         """
 
-        # Extract the input data and the target data
-        x = dataset.x
-        y = dataset.y
-
         for epoch in range(1, self.epochs + 1):
+
+            # Extract the input data and the target data
+            x = np.array(dataset.x)
+            y = np.reshape(dataset.y, (-1, 1))  # reshape the target data to a column vector
 
             # forward propagation
             for layer in self.layers:
@@ -91,7 +90,7 @@ class Backpropagation:
             # backward propagation
             # the loss derivative is calculated by the last layer
             # if we calculated the loss we would obtain a float value
-            error = self.loss_derivative(y, x)
+            error = self.loss_derivative(y, x)  # y predicted, y real
 
             # the error is propagated backwards
             for layer in self.layers[::-1]:
