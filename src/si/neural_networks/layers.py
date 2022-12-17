@@ -37,14 +37,22 @@ class Dense:
         :return: Returns the error of the previous layer.
         """
 
+        error_to_propagate = np.dot(error, self.weights.T)
+
         # updates the weights and bias
-        self.weights -= learning_rate * np.dot(self.x.T, error)  # x.T is used to multiply the error by the input
-        # data due to matrix multiplication rules
+        self.weights = self.weights - learning_rate * np.dot(self.x.T, error)  # x.T is used to multiply the error by
+        # the input data due to matrix multiplication rules
+
+        self.bias = self.bias - learning_rate * np.sum(error, axis=0)  # sum because the bias has the dimension of
+        # nodes and the error has the dimension of samples and nodes (batch size, nodes)
+
+        return error_to_propagate
 
 
 class SigmoidActivation:
     def __init__(self):
-        pass
+        # attribute
+        self.x = None
 
     @staticmethod
     def forward(input_data: np.ndarray) -> np.ndarray:
@@ -55,6 +63,19 @@ class SigmoidActivation:
         """
 
         return sigmoid_function(input_data)
+
+    def backward(self, error: np.ndarray) -> np.ndarray:
+        """
+        Computes the backward pass of the layer.
+        :return: Returns the error of the previous layer.
+        """
+        # multiplication of each element by the derivative and not by the entire matrix
+
+        sigmoid_derivative = sigmoid_function(self.x) * (1 - sigmoid_function(self.x))
+
+        error_to_propagate = error * sigmoid_derivative
+
+        return error_to_propagate
 
 
 class SoftMaxActivation:
@@ -75,6 +96,14 @@ class SoftMaxActivation:
 
         return formula
 
+    def backward(self, error: np.ndarray) -> np.ndarray:
+        """
+        Computes the backward pass of the layer.
+        :return: Returns the error of the previous layer.
+        """
+
+        pass
+
 
 class ReLUActivation:
     def __init__(self):
@@ -91,6 +120,18 @@ class ReLUActivation:
         data_pos = np.maximum(0, input_data)  # maximum between 0 and the input_data, the 0 is to avoid negative values
 
         return data_pos
+
+    def backward(self, error: np.ndarray) -> np.ndarray:
+        """
+        Computes the backwards pass of the rectified linear relationship.
+        :return: Returns the error of the previous layer.
+        """
+
+        relu_derivative = np.where(self.x > 0, 1, 0)
+
+        error_to_propagate = error * relu_derivative
+
+        return error_to_propagate
 
 
 class LinearActivation:

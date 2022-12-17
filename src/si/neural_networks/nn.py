@@ -3,6 +3,7 @@ from typing import Callable
 import numpy as np
 
 from si.data.dataset import Dataset
+from si.metrics.accuracy import accuracy
 from si.metrics.mse import mse, mse_derivative
 
 
@@ -38,6 +39,17 @@ class NN:
             x = layer.forward(x)
 
         return x
+
+    def score(self, dataset: Dataset, score_func: Callable = accuracy) -> float:
+        """
+        Returns the accuracy of the model.
+        :param dataset: Dataset object.
+        :param score_func: Function to calculate the score.
+        :return: Accuracy.
+        """
+        predictions = self.predict(dataset)
+
+        return score_func(dataset.y, predictions)
 
 
 class Backpropagation:
@@ -79,18 +91,19 @@ class Backpropagation:
 
         for epoch in range(1, self.epochs + 1):
 
-            # Extract the input data and the target data
-            x = np.array(dataset.x)
-            y = np.reshape(dataset.y, (-1, 1))  # reshape the target data to a column vector
-
             # forward propagation
+
+            # Extract the input data and the target data
+            y_pred = np.array(dataset.x)
+            y_true = np.reshape(dataset.y, (-1, 1))  # reshape the target data to a column vector
+
             for layer in self.layers:
-                x = layer.forward(x)
+                y_pred = layer.forward(y_pred)
 
             # backward propagation
             # the loss derivative is calculated by the last layer
             # if we calculated the loss we would obtain a float value
-            error = self.loss_derivative(y, x)  # y predicted, y real
+            error = self.loss_derivative(y_true, y_pred)  # y predicted, y real
 
             # the error is propagated backwards
             for layer in self.layers[::-1]:
@@ -98,7 +111,7 @@ class Backpropagation:
                 error = layer.backward(error, self.learning_rate)
 
             # saves history cost
-            cost = self.loss(y, x)  # now with mse
+            cost = self.loss(y_true, y_pred)  # now with mse
             self.history[epoch] = cost
 
             # prints the loss value if verbose is True
@@ -106,7 +119,3 @@ class Backpropagation:
                 print(f'Epoch {epoch}/{self.epochs} --- cost: {cost}')
 
             return self
-
-
-
-

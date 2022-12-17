@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def cross_entropy(y_true: np.ndarray, y_pred: np.ndarray):
+def cross_entropy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Returns the cross-entropy loss function.
     It's calculated by the difference of two probabilities, the true values and the predicted ones.
