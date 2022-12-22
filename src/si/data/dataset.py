@@ -144,7 +144,12 @@ class Dataset:
         if self.x is None:
             return
 
-        return pd.DataFrame(self.x).dropna()
+        if self.has_label():  # if the dataset has a label
+            self.y = self.y[~pd.isnull(self.x).any(axis=1)]  # remove rows with nan values from the label
+
+        self.x = self.x[~pd.isnull(self.x).any(axis=1)]  # remove rows with nan values from the features
+
+        return Dataset(self.x, self.y, self.features_names, self.label_name)
 
     def replace_nan(self, value):
         """
@@ -157,7 +162,9 @@ class Dataset:
         if self.x is None:
             return
 
-        return pd.DataFrame(self.x).fillna(value)
+        self.x = np.where(isnull(self.x), value, self.x)  # replace nan values from the features
+
+        return Dataset(self.x, self.y, self.features_names, self.label_name)
 
     def print_dataframe(self):
         """
@@ -193,6 +200,7 @@ if __name__ == '__main__':
     label = "y"
     dataset = Dataset(x=x, y=y, features_names=features, label_name=label)
 
-    print(dataset.shape())
-    print(dataset.remove_nan().shape())
-    # print(dataset.replace_nan(16))
+    print(dataset.print_dataframe())
+    # print(dataset.remove_nan().print_dataframe())
+    print(dataset.replace_nan(16).print_dataframe())
+
