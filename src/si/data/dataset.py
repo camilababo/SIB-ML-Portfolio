@@ -29,7 +29,8 @@ class Dataset:
             raise ValueError("x cannot be None")
 
         if features_names is None:
-            features_names = [str(i) for i in range(x.shape[1])]
+            features_names = [str(i) for i in range(x.shape[1])]  # if features_names is None, create a list with the
+            # number of features
         else:
             features_names = list(features_names)
 

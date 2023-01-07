@@ -35,7 +35,7 @@ def cross_validate(model,
     # computes the score for each fold of the score
     for i in range(cv):
         # set the random seed
-        random_state = np.random.randint(0, 1000)
+        random_state = np.random.randint(0, 1000)  # does this to avoid the same seed for each fold
 
         # store the seed
         scores['seed'].append(random_state)

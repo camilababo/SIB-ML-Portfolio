@@ -103,7 +103,7 @@ class Backpropagation:
             # backward propagation
             # the loss derivative is calculated by the last layer
             # if we calculated the loss we would obtain a float value
-            error = self.loss_derivative(y_true, y_pred)  # y predicted, y real
+            error = self.loss_derivative(y_true, y_pred)
 
             # the error is propagated backwards
             for layer in self.layers[::-1]:

@@ -33,7 +33,7 @@ class VarianceThreshold:
         if self.variance is None:
             raise Exception("You must fit the variance threshold before transform the dataset.")
 
-        selected_features = np.where(self.variance > self.threshold)[0]
+        selected_features = np.where(self.variance > self.threshold)[0] # [0] because np.where returns a tuple
         selected_features_names = [dataset.features_names[i] for i in selected_features]
         selected_features_data = dataset.x[:, selected_features]
 

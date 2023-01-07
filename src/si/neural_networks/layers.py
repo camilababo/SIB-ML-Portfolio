@@ -93,7 +93,7 @@ class SoftMaxActivation:
 
         zi_exp = np.exp(input_data - np.max(input_data))
         formula = zi_exp / np.sum(zi_exp, axis=1, keepdims=True)  # axis=1 means that the sum is done by row
-        # if set to True will keep the dimension of the array
+        # if set to True will keep the dimension     of the array
 
         return formula
 

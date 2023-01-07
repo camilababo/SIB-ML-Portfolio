@@ -24,7 +24,7 @@ class KNNRegressor:
 
     def _get_closet_label(self, x: np.ndarray):
         """
-        Calculates the class with the highest frequency.
+        Calculates the mean of the class with the highest frequency.
         :param x: Array of samples.
         :return: Indexes of the classes with the highest frequency
         """
@@ -40,9 +40,9 @@ class KNNRegressor:
         match_class_mean = np.mean(knn_labels)
 
         # Sorts the classes with the highest mean
-        high_freq_class = np.argsort(match_class_mean)[:self.k]
+        # high_freq_class = np.argsort(match_class_mean)[:self.k]
 
-        return high_freq_class
+        return match_class_mean
 
     def predict(self, dataset: Dataset) -> np.ndarray:
         """
@@ -59,4 +59,3 @@ class KNNRegressor:
         predictions = self.predict(dataset)
 
         return rmse(dataset.y, predictions)
-

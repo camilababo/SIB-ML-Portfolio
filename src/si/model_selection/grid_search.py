@@ -44,7 +44,8 @@ def grid_search_cv(model,
         parameters = {}
 
         # set the parameters
-        for parameter, value in zip(parameter_grid.keys(), combination):
+        for parameter, value in zip(parameter_grid.keys(), combination):  # zip returns a list of tuples with the
+            # parameter and the value
             setattr(model, parameter, value)  # set the combination of parameter and its values to the model
             parameters[parameter] = value  # stores the parameter and its value
 

@@ -19,7 +19,7 @@ class Kmeans:
         """
         seed = np.random.permutation(dataset.x.shape[0])[:self.k]  # randomly selects k samples from the dataset and
         # use them as centroids
-        self.centroids = dataset.x[seed, :]
+        self.centroids = dataset.x[seed, :]  # selects all column values for the sample
 
     def _get_closest_centroid(self, x: np.ndarray) -> np.ndarray:
         """
@@ -36,9 +36,9 @@ class Kmeans:
 
     def fit(self, dataset: Dataset) -> 'Kmeans':
         """
-        Calculates the score for each feature.
+        Fits the model.
         :param dataset: Dataset object.
-        :return: SelectKBest object.
+        :return: KMeans object.
         """
         self._init_centroids(dataset)
 
@@ -49,17 +49,19 @@ class Kmeans:
         while not convergence and i < self.max_iter:  # while the algorithm has not converged and the maximum number
             # of iterations has not been reached
 
-            new_labels = np.apply_along_axis(self._get_closest_centroid, axis=1, arr=dataset.x)
+            new_labels = np.apply_along_axis(self._get_closest_centroid, axis=1, arr=dataset.x) # gets the index of
+            # the closest centroid for each sample
 
             centroids = []
 
-            for j in range(self.k):
-                centroid = np.mean(dataset.x[new_labels == j], axis=0)
+            for j in range(self.k):  # for each centroid
+                centroid = np.mean(dataset.x[new_labels == j], axis=0)  # calculates the mean of the samples that are
+                # closest to the centroid
                 centroids.append(centroid)
 
-            self.centroids = np.array(centroids)
+            self.centroids = np.array(centroids)  # updates the centroids with the new values
 
-            convergence = np.any(new_labels != labels)
+            convergence = np.any(new_labels != labels) # if the labels of the samples have not changed, the algorithm hasm
             labels = new_labels
 
             i += 1

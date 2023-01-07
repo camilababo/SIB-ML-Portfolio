@@ -25,9 +25,9 @@ def read_data_file(filename: str, label: bool = False, sep: str = ","):
         # features_names = list(dataframe.dtype.names)[:-1] # gets the names of the columns except the last one
         # y = dataframe[label_name]
         # x = dataframe[features_names]
-        # x = np.array(x.tolist()) # convert structured numpy array to regular numpy array
+        # x = np.array(x.tolist()) # convert structured numpy array to regular numpy array because structured numpy arrays are not supported by sklearn
 
-        data = numpy.genfromtxt(filename, delimiter=sep)
+        data = numpy.genfromtxt(filename, delimiter=sep) # genfromtxt returns a regular numpy array
         x = data[:, :-1]  # gets all the columns except the last one
         y = data[:, -1]  # gets the last column
     else:
@@ -49,7 +49,7 @@ def write_data_file(dataset: Dataset, filename: str, label: bool = False, sep: s
     """
 
     if label:
-        data = numpy.hstack((dataset.x, dataset.y.reshape(-1, 1)))  # hstack stacks the data horizontally
+        data = numpy.hstack((dataset.x, dataset.y.reshape(-1, 1))) # hstack stacks the data horizontally
     else:
         data = dataset.x
 

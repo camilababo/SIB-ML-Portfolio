@@ -22,7 +22,8 @@ class PCA:
         """
 
         self.mean = np.mean(dataset.x, axis=0)  # axis=0 means that we want to calculate the mean for each column
-        return dataset.x - self.mean
+        self.centered_data = dataset.x - self.mean
+        return self.centered_data
 
     def _get_components(self, dataset: Dataset) -> np.ndarray:
         """
@@ -73,14 +74,11 @@ class PCA:
         if self.components is None:
             raise Exception("You must fit the PCA before transform the dataset.")
 
-        # Get centered data
-        centered_data = self._get_centered_data(dataset)
-
         # Get transposed V matrix
         v_matrix = self.v_matrix_t.T
 
         # Get transformed data
-        transformed_data = np.dot(centered_data, v_matrix)
+        transformed_data = np.dot(self.centered_data, v_matrix)
 
         return Dataset(transformed_data, dataset.y, dataset.features_names, dataset.label_name)
 

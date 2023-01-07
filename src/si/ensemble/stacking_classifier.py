@@ -26,7 +26,7 @@ class StackingClassifier:
             predictions.append(model.predict(dataset))
 
         # trains the final model
-        self.final_model.fit(Dataset(dataset.x, np.array(predictions).T))
+        self.final_model.fit(Dataset(np.array(predictions).T, dataset.y))
 
         return self
 
@@ -42,7 +42,7 @@ class StackingClassifier:
             predictions.append(model.predict(dataset))
 
         # gets the final model previsions
-        y_pred = self.final_model.predict(Dataset(dataset.x, np.array(predictions).T))
+        y_pred = self.final_model.predict(Dataset(np.array(predictions).T, dataset.y))
 
         return y_pred
 

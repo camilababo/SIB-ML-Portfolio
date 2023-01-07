@@ -128,8 +128,8 @@ class LogisticRegression:
         predictions = sigmoid_function(np.dot(dataset.x, self.theta) + self.theta_zero)
 
         mask = predictions >= 0.5  # mask for the predictions that are greater than 0.5
-        predictions[mask] = 1
-        predictions[~mask] = 0
+        predictions[mask] = 1  # set the predictions that are greater than 0.5 to 1
+        predictions[~mask] = 0  # set the predictions that are less than 0.5 to 0
         return predictions
 
     def score(self, dataset: Dataset):
@@ -152,7 +152,7 @@ class LogisticRegression:
         predictions = sigmoid_function(np.dot(dataset.x, self.theta) + self.theta_zero)
 
         cost = (- dataset.y * np.log(predictions)) - ((1 - dataset.y) * np.log(1 - predictions))
-        cost = np.sum(cost) / sample_n
+        cost = np.sum(cost) / sample_n  # average cost
         # regularization term
         cost = cost + (self.l2_penalty * np.sum(self.theta ** 2) / (2 * sample_n))
 

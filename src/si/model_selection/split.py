@@ -23,7 +23,7 @@ def train_test_split(dataset: Dataset, test_size: float = 0.3, random_state: int
     split_div = int(n_samples * test_size)
 
     # get the dataset permutations
-    permutations = np.random.permutation(n_samples)
+    permutations = np.random.permutation(n_samples) #
 
     # get the test and train sets
     test_idx = permutations[:split_div]

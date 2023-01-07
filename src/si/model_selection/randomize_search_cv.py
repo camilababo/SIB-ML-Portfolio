@@ -42,7 +42,7 @@ def randomized_search_cv(model,
         # set the parameters
         for parameter, value in parameter_distribution.items():
             # set the combination of parameter and its values to the model
-            parameters[parameter] = np.random.choice(value)
+            parameters[parameter] = np.random.choice(value)  # choose a random value from the distribution
 
         # set the parameters to the model
         for parameter, value in parameters.items():

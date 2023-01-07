@@ -53,11 +53,11 @@ class KMer:
         # Builds a dictionary with all the possible k-mers with counts of zero
         k_mer_counts = {k_mer: 0 for k_mer in self.k_mers}
 
-        for i in range(len(sequence) - self.k + 1):
-            k_mer = sequence[i:i + self.k]
-            k_mer_counts[k_mer] += 1
+        for i in range(len(sequence) - self.k + 1): # iterate over the sequence and add the k-mer to the dictionary
+            k_mer = sequence[i:i + self.k] # get the k-mer
+            k_mer_counts[k_mer] += 1 # add the k-mer to the dictionary
 
-        # Normalize the counts
+        # Normalize the counts to get the frequency of each k-mer in the sequence
         return np.array([k_mer_counts[k_mer] / len(sequence) for k_mer in self.k_mers])
 
     def transform(self, dataset: Dataset) -> Dataset:

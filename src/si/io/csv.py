@@ -21,15 +21,15 @@ def read_csv(filename: str, sep: str = ',', features: bool = False, label: bool 
     dataframe = pd.read_csv(filename, sep=sep)
 
     if features:
-        features_dataframe = dataframe.iloc[:, :-1].to_numpy()
-        features_names = dataframe.columns[:-1].tolist()
+        features_dataframe = dataframe.iloc[:, :-1].to_numpy() # gets all the columns except the last one
+        features_names = dataframe.columns[:-1].tolist() # gets the names of the columns except the last one
     else:
         features_dataframe = None
         features_names = None
 
     if label:
-        y = dataframe.iloc[:, -1].to_numpy()
-        label_name = dataframe.columns[-1]
+        y = dataframe.iloc[:, -1].to_numpy() # gets the last column
+        label_name = dataframe.columns[-1] # gets the name of the last column
     else:
         y = None
         label_name = None
@@ -65,9 +65,9 @@ def write_csv(dataset: Dataset, filename: str, sep: str = ',', features: bool = 
         label_name = None
         # label_values = np.array([])
 
-    label_values = label.reshape(label.shape[0], 1)
-    results = numpy.concatenate((features, label_values), axis=1)
-    labels = features_names + [label_name]
+    label_values = label.reshape(label.shape[0], 1) # reshape the label values to a column vector
+    results = numpy.concatenate((features, label_values), axis=1) # concatenate the features and the label
+    labels = features_names + [label_name] # concatenate the features names and the label name
 
     dataframe = pd.DataFrame(data=results, columns=labels)
     dataframe.to_csv(filename, sep=sep, index=False)

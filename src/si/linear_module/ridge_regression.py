@@ -76,7 +76,8 @@ class RidgeRegression:
         # learning rate is multiplicated by 1/m to normalize the rate to the dataset size
 
         # computing the penalty
-        penalization_term = self.alpha * (self.l2_penalty / m) * self.theta
+        penalization_term = self.alpha * (self.l2_penalty / m) * self.theta # calculates the penalty term of the cost
+        # function (L2 regularization) and normalizes it to the dataset size
 
         # updating the model parameters
         self.theta = self.theta - gradient - penalization_term
@@ -104,7 +105,7 @@ class RidgeRegression:
         assert self.alpha_type in options, f"'{self.alpha_type}' is not in {options}"
 
         # gradient descent
-        for i in range(self.max_iter):
+        for i in range(self.max_iter): # iterates over the dataset for the maximum number of iterations
 
             self.gradient_descent(dataset)
 
@@ -132,7 +133,8 @@ class RidgeRegression:
         :param dataset: The dataset to predict the output of the dataset
         :return: The predictions of the dataset
         """
-        return np.dot(dataset.x, self.theta) + self.theta_zero
+        return np.dot(dataset.x, self.theta) + self.theta_zero # predicted values are obtained by calculating the
+        # feature values by the parameter coefficients
 
     def score(self, dataset: Dataset) -> float:
         """
